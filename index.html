@@ -2,7 +2,6 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<link rel="icon" type="image/png" href="logo/FSGC-06.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0A1628">
 <meta name="description" content="Test de orientare academică – Facultatea de Științe ale Guvernării și Comunicării, Universitatea de Vest din Timișoara">
@@ -54,6 +53,11 @@
   --shadow-sm: 0 1px 2px rgba(10, 22, 40, 0.04);
   --shadow-md: 0 4px 16px rgba(10, 22, 40, 0.06), 0 1px 3px rgba(10, 22, 40, 0.04);
   --shadow-lg: 0 12px 40px rgba(10, 22, 40, 0.08), 0 4px 12px rgba(10, 22, 40, 0.04);
+
+  /* Level accent - overridden per block via JS by setting on :root */
+  --level-accent: var(--accent);
+  --level-accent-deep: var(--accent-deep);
+  --level-accent-soft: rgba(168, 121, 76, 0.12);
 }
 
 /* ============================================================
@@ -241,7 +245,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
   position: sticky;
   top: 58px;
   z-index: 49;
-  height: 2px;
+  height: 3px;
   background: var(--line-soft);
   overflow: hidden;
   display: none;
@@ -255,10 +259,29 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 
 .progress-fill {
   height: 100%;
-  background: var(--ink);
+  background: var(--level-accent);
   width: 0%;
-  transition: width 500ms var(--ease-out);
+  transition: width 600ms var(--ease-out), background 800ms var(--ease-out);
+  position: relative;
 }
+
+/* Subtle leading dot at progress edge */
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--level-accent);
+  box-shadow: 0 0 0 2px var(--paper);
+  opacity: 0;
+  transition: opacity 400ms ease 200ms;
+}
+
+.progress-fill.has-progress::after { opacity: 1; }
 
 /* ============================================================
    WELCOME SCREEN
@@ -1008,8 +1031,254 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 400; line-height
 }
 
 /* ============================================================
-   RESULTS SCREEN
+   MOTIVATION INTERSTITIAL
    ============================================================ */
+.motivation-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  position: relative;
+  text-align: left;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.motivation-wrap::before {
+  content: "";
+  position: absolute;
+  top: 3rem;
+  left: 0;
+  width: 80px;
+  height: 1px;
+  background: var(--level-accent);
+}
+
+.motivation-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--level-accent);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.motivation-eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--level-accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulseDot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.4); }
+}
+
+.motivation-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  max-width: 18ch;
+}
+
+.motivation-title em {
+  font-style: italic;
+  color: var(--level-accent-deep);
+}
+
+.motivation-text {
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+  max-width: 50ch;
+  margin-bottom: 2.5rem;
+}
+
+.motivation-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.motivation-progress-track {
+  flex: 1;
+  max-width: 240px;
+  height: 1px;
+  background: var(--line);
+  position: relative;
+}
+
+.motivation-progress-fill {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  background: var(--level-accent);
+  width: 0%;
+  transition: width 1000ms var(--ease-out) 200ms;
+}
+
+.motivation-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: var(--ink);
+  color: var(--paper-warm);
+  padding: 1rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 2px;
+  transition: all 250ms var(--ease-out);
+  min-height: 48px;
+}
+
+.motivation-cta:hover {
+  background: var(--ink-soft);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.motivation-cta .arrow { transition: transform 200ms var(--ease-out); }
+.motivation-cta:hover .arrow { transform: translateX(3px); }
+
+.motivation-skip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-mute);
+  margin-top: 1.25rem;
+  display: block;
+}
+
+/* ============================================================
+   STREAK BADGE (gamification - subtle)
+   ============================================================ */
+.streak-badge {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 0.5rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  box-shadow: var(--shadow-md);
+  border-radius: 2px;
+  z-index: 40;
+  transform: translateY(120%);
+  opacity: 0;
+  transition: transform 500ms var(--ease-out), opacity 400ms ease;
+  max-width: calc(100vw - 2rem);
+}
+
+.streak-badge.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.streak-badge .streak-symbol {
+  color: var(--level-accent);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 480px) {
+  .streak-badge {
+    bottom: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.65rem;
+    padding: 0.4rem 0.7rem;
+  }
+}
+
+/* ============================================================
+   RESUME PROMPT
+   ============================================================ */
+.resume-banner {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  border-radius: 0;
+}
+
+.resume-banner-text {
+  flex: 1;
+  min-width: 220px;
+}
+
+.resume-banner-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  margin-bottom: 0.25rem;
+}
+
+.resume-banner-detail {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+.resume-banner-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.resume-btn {
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  border-radius: 2px;
+  transition: all 200ms ease;
+  min-height: 40px;
+}
+
+.resume-btn-primary {
+  background: var(--ink);
+  color: var(--paper-warm);
+}
+
+.resume-btn-primary:hover { background: var(--ink-soft); }
+
+.resume-btn-ghost {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1px solid var(--line);
+}
+
+.resume-btn-ghost:hover { color: var(--ink); border-color: var(--ink-muted); }
 .result-wrap {
   flex: 1;
   display: flex;
@@ -1734,25 +2003,25 @@ const PROGRAM_ORDER = ['AP', 'CRP', 'J', 'MD', 'PUB', 'RISE', 'SP', 'SSEC'];
 /* ============================================================
    QUESTION DATA
    ============================================================ */
-// Block 1: Likert (Q1–Q17) - 5-point opinion scale
+// Block 1: Likert (Q1–Q17) - 5-point identity scale (nu mă descrie ↔ mă descrie complet)
 const LIKERT = [
-  { id: 'Q1',  text: 'Mă motivează ideea de a îmbunătăți modul în care funcționează serviciile publice.', program: 'AP', direction: 'positive' },
-  { id: 'Q2',  text: 'Activitățile care implică proceduri, reguli și documente administrative mă descurajează.', program: 'AP', direction: 'inverse' },
-  { id: 'Q3',  text: 'Îmi place să formulez mesaje diferite pentru publicuri diferite.', program: 'CRP', direction: 'positive' },
-  { id: 'Q4',  text: 'Mi-ar fi greu să reprezint public imaginea unei organizații.', program: 'CRP', direction: 'inverse' },
-  { id: 'Q5',  text: 'Înainte să cred sau să distribui o informație, simt nevoia să-i verific sursa.', program: 'J', direction: 'positive' },
-  { id: 'Q6',  text: 'Ideea de a pune întrebări incomode pentru a lămuri un subiect public nu mă atrage.', program: 'J', direction: 'inverse' },
-  { id: 'Q7',  text: 'Mă energizează proiectele în care combin text, imagine, video și platforme digitale.', program: 'MD', direction: 'positive' },
-  { id: 'Q8',  text: 'Mă obosește gândul de a învăța instrumente digitale noi pentru a crea conținut.', program: 'MD', direction: 'inverse' },
-  { id: 'Q9',  text: 'Îmi place să observ cum reacționează oamenii la branduri, campanii și identități vizuale.', program: 'PUB', direction: 'positive' },
-  { id: 'Q10', text: 'Ideea de a convinge prin creativitate și strategie de brand nu mă reprezintă.', program: 'PUB', direction: 'inverse' },
-  { id: 'Q11', text: 'Urmăresc cu interes felul în care statele cooperează, negociază sau intră în tensiune.', program: 'RISE', direction: 'positive' },
-  { id: 'Q12', text: 'Evenimentele internaționale mi se par prea îndepărtate ca să merite urmărite constant.', program: 'RISE', direction: 'inverse' },
-  { id: 'Q13', text: 'Îmi place să analizez de ce oamenii susțin anumite idei, partide sau lideri.', program: 'SP', direction: 'positive' },
-  { id: 'Q14', text: 'Discuțiile despre ideologii, alegeri și instituții îmi par prea abstracte.', program: 'SP', direction: 'inverse' },
-  { id: 'Q15', text: 'Sunt atras(ă) de analiza riscurilor, amenințărilor și a modului în care pot fi prevenite.', program: 'SSEC', direction: 'positive' },
-  { id: 'Q16', text: 'Subiectele despre securitate, intelligence sau crize mi se par prea apăsătoare pentru mine.', program: 'SSEC', direction: 'inverse' },
-  { id: 'Q17', text: 'Pentru verificarea atenției, selectează 2 – Mai degrabă în dezacord.', attention: true, expected: 2 }
+  { id: 'Q1',  text: 'Mă atrage ideea să fac lucrurile publice să funcționeze mai bine.', program: 'AP', direction: 'positive' },
+  { id: 'Q2',  text: 'Mă descurajează activitățile care implică reguli, proceduri și documente.', program: 'AP', direction: 'inverse' },
+  { id: 'Q3',  text: 'Îmi place să adaptez mesajele pentru oameni diferiți din viața mea.', program: 'CRP', direction: 'positive' },
+  { id: 'Q4',  text: 'Mi-ar fi greu să fiu vocea publică a unei organizații.', program: 'CRP', direction: 'inverse' },
+  { id: 'Q5',  text: 'Înainte să cred sau să distribui o informație, îi verific sursa.', program: 'J', direction: 'positive' },
+  { id: 'Q6',  text: 'Nu mă atrage să pun întrebări incomode ca să lămuresc ceva.', program: 'J', direction: 'inverse' },
+  { id: 'Q7',  text: 'Mă entuziasmează proiectele unde combin text, imagine și video.', program: 'MD', direction: 'positive' },
+  { id: 'Q8',  text: 'Mă obosește ideea să învăț tooluri digitale noi.', program: 'MD', direction: 'inverse' },
+  { id: 'Q9',  text: 'Observ cu atenție cum reacționează oamenii la branduri și campanii.', program: 'PUB', direction: 'positive' },
+  { id: 'Q10', text: 'Nu mă văd convingând oamenii prin creativitate și branding.', program: 'PUB', direction: 'inverse' },
+  { id: 'Q11', text: 'Mă interesează cum cooperează, negociază sau se ceartă statele între ele.', program: 'RISE', direction: 'positive' },
+  { id: 'Q12', text: 'Mi se pare că ce se întâmplă în lume e prea departe ca să mă preocupe zilnic.', program: 'RISE', direction: 'inverse' },
+  { id: 'Q13', text: 'Mă prinde să analizez de ce oamenii susțin anumiți lideri sau idei.', program: 'SP', direction: 'positive' },
+  { id: 'Q14', text: 'Mi se par prea abstracte discuțiile despre ideologii și instituții.', program: 'SP', direction: 'inverse' },
+  { id: 'Q15', text: 'Mă atrage să analizez riscuri și să mă gândesc cum pot fi prevenite.', program: 'SSEC', direction: 'positive' },
+  { id: 'Q16', text: 'Subiectele despre crize, intelligence sau securitate mă apasă.', program: 'SSEC', direction: 'inverse' },
+  { id: 'Q17', text: 'Doar ca să verificăm că ești atent(ă): selectează 2.', attention: true, expected: 2 }
 ].map(q => ({ ...q, block: 'likert' }));
 
 // Block 2: Forced-choice (Q18–Q25)
@@ -1951,16 +2220,28 @@ const RANKINGS = [
 
 // Block structure for intros
 const BLOCKS = [
-  { id: 'likert',   num: '01', total: '04', title: 'Preferințe și atitudini', intro: 'Începem cu 17 afirmații scurte. Răspunde după cum te descrie acum, nu după cum crezi că „ar trebui" să răspunzi. Nu există răspunsuri bune sau rele - doar răspunsuri autentice.', duration: '3 min', questions: LIKERT },
-  { id: 'forced',   num: '02', total: '04', title: 'Alegeri între alternative', intro: 'Urmează 8 situații în care trebuie să alegi între mai multe variante atractive. Selectează-o pe cea care te reprezintă cel mai bine, chiar dacă altele sună de asemenea interesant.', duration: '3 min', questions: FORCED },
-  { id: 'vignette', num: '03', total: '04', title: 'Scenarii practice', intro: 'Acum 8 scenarii de tip „ce ai face tu?". Imaginează-ți că tu ești persoana care trebuie să facă primul pas și alege reacția cea mai apropiată de stilul tău real.', duration: '3 min', questions: VIGNETTES },
-  { id: 'ranking',  num: '04', total: '04', title: 'Ierarhizare', intro: 'Ultimul pas: două exerciții scurte de ordonare. Trage și ordonează opțiunile de la cea mai atractivă (sus) la cea mai puțin atractivă (jos). Aceste întrebări ne ajută să rafinăm rezultatul.', duration: '1 min', questions: RANKINGS }
+  { id: 'likert',   num: '01', total: '04', title: 'Cum ești tu, de fapt', intro: '17 întrebări rapide la care nu există un răspuns bun sau greșit. Doar bifează cât de bine te descrie fiecare afirmație.', duration: '~3 min', accent: '#A8794C', accentName: 'auriu', questions: LIKERT },
+  { id: 'forced',   num: '02', total: '04', title: 'Ce alegi instinctiv', intro: 'Acum 8 alegeri rapide. Nu gândi prea mult - alege ce te atrage prima dată, înainte să-ți pui întrebări.', duration: '~3 min', accent: '#3D6B5C', accentName: 'verde', questions: FORCED },
+  { id: 'vignette', num: '03', total: '04', title: 'Tu ce ai face?', intro: 'Imaginează-ți 8 scenarii reale în care tu trebuie să decizi primul pas. Alege reacția cea mai apropiată de stilul tău.', duration: '~3 min', accent: '#7A5BA1', accentName: 'mov', questions: VIGNETTES },
+  { id: 'ranking',  num: '04', total: '04', title: 'Ce te atrage cel mai mult', intro: 'Ultimele 2 provocări. Trage și ordonează rolurile de la cel mai atractiv (sus) la cel mai puțin atractiv (jos).', duration: '~1 min', accent: '#B85A4C', accentName: 'cărămiziu', questions: RANKINGS }
 ];
+
+// Motivation interstitials - shown AFTER specific question numbers (1-indexed, global)
+const MOTIVATIONS = {
+  5:  { eyebrow: 'Pauză scurtă',     title: 'Interesant…',                   text: 'Începem să vedem un pattern. Continuă - fiecare răspuns rafinează profilul.' },
+  10: { eyebrow: 'La jumătate',      title: 'Ai început bine.',               text: 'Apar deja două direcții interesante în răspunsurile tale.' },
+  17: { eyebrow: 'Nivel încheiat',   title: 'Gata partea de reflecție.',      text: 'Acum urmează scenariile - partea unde vedem cum reacționezi în situații reale.' },
+  22: { eyebrow: 'Trei sferturi',    title: 'Încă 2 minute.',                  text: 'Suntem aproape - și începi să vezi unde te potrivești.' },
+  28: { eyebrow: 'Aproape gata',     title: 'Ai ajuns mai departe decât 63% dintre elevi.', text: 'Statisticile arată că majoritatea abandonează după primele 10 întrebări. Tu ești aici.' },
+  32: { eyebrow: 'Linia de sosire',  title: 'Suntem foarte aproape.',          text: 'Mai sunt doar 2 ierarhizări și apoi îți generăm raportul personal.' }
+};
 </script>
 <script>
 /* ============================================================
    STATE MANAGEMENT
    ============================================================ */
+const STORAGE_KEY = 'fsgc_orientare_v1';
+
 const state = {
   screen: 'welcome',
   currentBlockIdx: 0,
@@ -1972,7 +2253,11 @@ const state = {
   attentionFailed: 0,
   startedAt: null,
   finishedAt: null,
-  result: null
+  result: null,
+  shownMotivations: {},  // tracks which milestone screens have been shown
+  streakDismissed: false,
+  soundEnabled: true,
+  pendingMotivationAfter: null  // global question number after which to show interstitial
 };
 
 // Total scorable questions (excluding attention checks) for progress
@@ -2111,7 +2396,41 @@ const mastMeta = document.getElementById('mast-meta');
 
 function setProgress(pct, visible = true) {
   progressRail.classList.toggle('visible', visible);
-  progressFill.style.width = Math.max(0, Math.min(100, pct)) + '%';
+  const v = Math.max(0, Math.min(100, pct));
+  progressFill.style.width = v + '%';
+  progressFill.classList.toggle('has-progress', v > 1 && v < 100);
+}
+
+function setLevelAccent(hexColor) {
+  if (!hexColor) {
+    document.documentElement.style.removeProperty('--level-accent');
+    document.documentElement.style.removeProperty('--level-accent-deep');
+    document.documentElement.style.removeProperty('--level-accent-soft');
+    return;
+  }
+  // Generate deeper version (~ -15% lightness) and softer (alpha 0.12)
+  document.documentElement.style.setProperty('--level-accent', hexColor);
+  document.documentElement.style.setProperty('--level-accent-deep', darkenHex(hexColor, 0.18));
+  document.documentElement.style.setProperty('--level-accent-soft', hexToRgba(hexColor, 0.12));
+}
+
+function hexToRgba(hex, a) {
+  const m = hex.replace('#', '');
+  const r = parseInt(m.substring(0, 2), 16);
+  const g = parseInt(m.substring(2, 4), 16);
+  const b = parseInt(m.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+
+function darkenHex(hex, amount) {
+  const m = hex.replace('#', '');
+  let r = parseInt(m.substring(0, 2), 16);
+  let g = parseInt(m.substring(2, 4), 16);
+  let b = parseInt(m.substring(4, 6), 16);
+  r = Math.max(0, Math.round(r * (1 - amount)));
+  g = Math.max(0, Math.round(g * (1 - amount)));
+  b = Math.max(0, Math.round(b * (1 - amount)));
+  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
 }
 
 function updateMastMeta(text) {
@@ -2136,28 +2455,266 @@ function updateProgress() {
   setProgress(pct, true);
 }
 
+/* ============================================================
+   SOUND ENGINE - Web Audio, no external files
+   ============================================================ */
+let _audioCtx = null;
+
+function getAudioCtx() {
+  if (!state.soundEnabled) return null;
+  if (!_audioCtx) {
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (Ctx) _audioCtx = new Ctx();
+    } catch (e) {
+      return null;
+    }
+  }
+  if (_audioCtx && _audioCtx.state === 'suspended') {
+    _audioCtx.resume().catch(() => {});
+  }
+  return _audioCtx;
+}
+
+function playTap() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  try {
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, t);
+    osc.frequency.exponentialRampToValueAtTime(440, t + 0.08);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.05, t + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.13);
+  } catch (e) { /* silent */ }
+}
+
+function playSoftChime() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  try {
+    const t = ctx.currentTime;
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      const start = t + i * 0.06;
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.04, start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.5);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.55);
+    });
+  } catch (e) { /* silent */ }
+}
+
+function playCompletion() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  try {
+    const t = ctx.currentTime;
+    [392, 523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      const start = t + i * 0.09;
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.06, start + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.7);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.75);
+    });
+  } catch (e) { /* silent */ }
+}
+
+/* ============================================================
+   PERSISTENCE - save/load progress to localStorage
+   ============================================================ */
+function saveProgress() {
+  try {
+    const snap = {
+      v: 1,
+      ts: Date.now(),
+      currentBlockIdx: state.currentBlockIdx,
+      currentQuestionIdx: state.currentQuestionIdx,
+      answers: state.answers,
+      demographics: state.demographics,
+      shownMotivations: state.shownMotivations,
+      startedAt: state.startedAt ? state.startedAt.toISOString() : null
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snap));
+  } catch (e) { /* quota or privacy mode - silent */ }
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const snap = JSON.parse(raw);
+    // Reject snapshots older than 14 days
+    if (Date.now() - snap.ts > 14 * 24 * 3600 * 1000) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return snap;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearProgress() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function applyProgressSnapshot(snap) {
+  state.currentBlockIdx = snap.currentBlockIdx || 0;
+  state.currentQuestionIdx = snap.currentQuestionIdx || 0;
+  state.answers = snap.answers || {};
+  state.demographics = snap.demographics || {};
+  state.shownMotivations = snap.shownMotivations || {};
+  state.startedAt = snap.startedAt ? new Date(snap.startedAt) : new Date();
+}
+
+/* ============================================================
+   STREAK BADGE
+   ============================================================ */
+let _streakBadgeEl = null;
+let _streakHideTimer = null;
+
+function showStreakBadge(message) {
+  if (state.streakDismissed) return;
+  if (!_streakBadgeEl) {
+    _streakBadgeEl = document.createElement('div');
+    _streakBadgeEl.className = 'streak-badge';
+    document.body.appendChild(_streakBadgeEl);
+  }
+  _streakBadgeEl.innerHTML = `<span class="streak-symbol">✦</span><span>${message}</span>`;
+  _streakBadgeEl.classList.add('visible');
+  if (_streakHideTimer) clearTimeout(_streakHideTimer);
+  _streakHideTimer = setTimeout(() => {
+    if (_streakBadgeEl) _streakBadgeEl.classList.remove('visible');
+  }, 2800);
+}
+
+/* ============================================================
+   MOTIVATION INTERSTITIAL
+   ============================================================ */
+function maybeShowMotivation(globalQNum) {
+  // Show after questions 5, 10, 17, 22, 28, 32 - but only once each
+  if (!MOTIVATIONS[globalQNum]) return false;
+  if (state.shownMotivations[globalQNum]) return false;
+  state.shownMotivations[globalQNum] = true;
+  saveProgress();
+  renderMotivation(globalQNum);
+  return true;
+}
+
+function renderMotivation(milestone) {
+  const m = MOTIVATIONS[milestone];
+  const pct = (milestone / 35) * 100;
+  updateMastMeta(`Pauză · ${milestone}/35`);
+
+  // Use current block's accent
+  const block = BLOCKS[state.currentBlockIdx];
+  if (block) setLevelAccent(block.accent);
+
+  setProgress(pct, true);
+
+  main.innerHTML = `
+    <section class="screen active">
+      <div class="container">
+        <div class="motivation-wrap">
+          <div class="motivation-eyebrow">
+            <span class="dot"></span>
+            <span>${m.eyebrow}</span>
+          </div>
+          <h2 class="motivation-title">${m.title}</h2>
+          <p class="motivation-text">${m.text}</p>
+          <div class="motivation-progress">
+            <span>${milestone}/35</span>
+            <div class="motivation-progress-track">
+              <div class="motivation-progress-fill" id="mot-fill"></div>
+            </div>
+            <span>${Math.round(pct)}%</span>
+          </div>
+          <button class="motivation-cta" onclick="continueFromMotivation()">
+            <span>Continuă</span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  `;
+
+  // Animate mini progress
+  setTimeout(() => {
+    const f = document.getElementById('mot-fill');
+    if (f) f.style.width = pct + '%';
+  }, 100);
+
+  playSoftChime();
+}
+
+function continueFromMotivation() {
+  // Advance the actual question state and render next question
+  advanceQuestionPointer();
+  renderCurrentStep();
+}
+
 function renderWelcome() {
   setProgress(0, false);
+  setLevelAccent(null); // reset to default gold
   updateMastMeta('Ediția 2026');
+
+  const snap = loadProgress();
+  let resumeBanner = '';
+  if (snap && (Object.keys(snap.answers || {}).length > 0)) {
+    const answeredCount = Object.keys(snap.answers).length;
+    const since = formatTimeSince(snap.ts);
+    resumeBanner = `
+      <div class="resume-banner">
+        <div class="resume-banner-text">
+          <div class="resume-banner-label">Ai un test în desfășurare</div>
+          <div class="resume-banner-detail">Ai răspuns la ${answeredCount} ${answeredCount === 1 ? 'întrebare' : 'întrebări'} ${since}. Continui de unde ai rămas?</div>
+        </div>
+        <div class="resume-banner-actions">
+          <button class="resume-btn resume-btn-ghost" onclick="discardProgress()">Începe din nou</button>
+          <button class="resume-btn resume-btn-primary" onclick="resumeProgress()">Continuă</button>
+        </div>
+      </div>
+    `;
+  }
+
   main.innerHTML = `
     <section class="screen active">
       <div class="container welcome-wrap">
+        ${resumeBanner}
         <div class="welcome-grid">
           <div class="welcome-left">
             <span class="eyebrow">Orientare academică · FSGC</span>
-            <h1 class="welcome-title">Care dintre cele opt programe <em>ți se potrivește</em> cu adevărat?</h1>
+            <h1 class="welcome-title">Ce profil de la FSGC <em>ți se potrivește</em>?</h1>
             <p class="welcome-lede">
-              Un instrument construit pe profilele oficiale ale programelor de licență ale Facultății
-              de Științe ale Guvernării și Comunicării - UVT. Răspunzi la 35 de întrebări scurte,
-              iar la final primești un raport personalizat cu programul cel mai compatibil cu tine,
-              într-un format pe care îl poți descărca și păstra.
+              Răspunzi la 35 de întrebări scurte, organizate pe 4 niveluri. La final
+              primești un raport personal cu programul de licență cel mai compatibil
+              cu tine - unul pe care îl poți descărca, salva sau folosi într-o discuție
+              de orientare. Tot ce răspunzi rămâne pe dispozitivul tău.
             </p>
             <button class="welcome-cta" onclick="startTest()">
               <span>Începe testul</span>
               <span class="arrow">→</span>
             </button>
             <div class="welcome-meta">
-              ~ 10 minute · 35 de întrebări · confidențial
+              ~ 10 minute · 4 niveluri · confidențial
             </div>
           </div>
 
@@ -2178,12 +2735,12 @@ function renderWelcome() {
                 <span class="stat-label">Programe</span>
               </div>
               <div class="stat-block">
-                <span class="stat-num">35</span>
-                <span class="stat-label">Întrebări</span>
+                <span class="stat-num">4</span>
+                <span class="stat-label">Niveluri</span>
               </div>
               <div class="stat-block">
-                <span class="stat-num">0</span>
-                <span class="stat-label">Date salvate</span>
+                <span class="stat-num">~10</span>
+                <span class="stat-label">Minute</span>
               </div>
             </div>
           </aside>
@@ -2191,6 +2748,46 @@ function renderWelcome() {
       </div>
     </section>
   `;
+}
+
+function formatTimeSince(ts) {
+  const diffMs = Date.now() - ts;
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return 'acum câteva secunde';
+  if (mins < 60) return `acum ${mins} ${mins === 1 ? 'minut' : 'minute'}`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `acum ${hrs} ${hrs === 1 ? 'oră' : 'ore'}`;
+  const days = Math.floor(hrs / 24);
+  return `acum ${days} ${days === 1 ? 'zi' : 'zile'}`;
+}
+
+function resumeProgress() {
+  const snap = loadProgress();
+  if (!snap) {
+    renderWelcome();
+    return;
+  }
+  applyProgressSnapshot(snap);
+  // Render the question they were on (or the block intro if at q0)
+  if (state.currentQuestionIdx === 0 && state.currentBlockIdx > 0) {
+    renderBlockIntro(state.currentBlockIdx);
+  } else if (state.currentBlockIdx === 0 && state.currentQuestionIdx === 0) {
+    renderBlockIntro(0);
+  } else {
+    renderQuestion();
+  }
+}
+
+function discardProgress() {
+  clearProgress();
+  // Reset state
+  state.currentBlockIdx = 0;
+  state.currentQuestionIdx = 0;
+  state.answers = {};
+  state.demographics = {};
+  state.shownMotivations = {};
+  state.startedAt = null;
+  renderWelcome();
 }
 
 function startTest() {
@@ -2311,14 +2908,16 @@ function renderBlockIntro(blockIdx) {
   state.currentBlockIdx = blockIdx;
   state.currentQuestionIdx = 0;
   const block = BLOCKS[blockIdx];
-  updateMastMeta(`Secțiunea ${block.num} din ${block.total}`);
+  setLevelAccent(block.accent);
+  updateMastMeta(`Nivel ${block.num} din ${block.total}`);
   updateProgress();
+  saveProgress();
 
   main.innerHTML = `
     <section class="screen active">
       <div class="container intro-wrap">
         <div class="intro-label">
-          <span>Secțiunea ${block.num} din ${block.total}</span>
+          <span>Nivel ${block.num} din ${block.total}</span>
           <span>· ${block.duration}</span>
         </div>
         <div class="intro-section-num">${block.num}<span class="total">/ ${block.total}</span></div>
@@ -2340,6 +2939,7 @@ function renderQuestion() {
   const q = block.questions[state.currentQuestionIdx];
   const globalNum = getGlobalQuestionNumber();
 
+  setLevelAccent(block.accent);
   updateMastMeta(`${globalNum} / 35`);
   updateProgress();
 
@@ -2353,7 +2953,7 @@ function renderQuestion() {
       <div class="container question-wrap">
         <div class="q-meta-row">
           <span class="q-number">Întrebare ${globalNum}/35</span>
-          <span class="q-block">Secțiunea ${block.num}</span>
+          <span class="q-block">Nivel ${block.num}</span>
         </div>
         ${inner}
         <div class="q-footer">
@@ -2377,7 +2977,7 @@ function renderQuestion() {
 }
 
 function renderLikertQuestion(q) {
-  const labels = ['Deloc de acord', 'În dezacord', 'Neutru', 'De acord', 'Foarte de acord'];
+  const labels = ['Nu mă descrie deloc', 'Mai puțin', 'Cumva', 'Destul de mult', 'Mă descrie complet'];
   const btns = [1,2,3,4,5].map(n => `
     <button class="likert-btn" data-value="${n}" aria-label="${labels[n-1]}">${n}</button>
   `).join('');
@@ -2385,8 +2985,8 @@ function renderLikertQuestion(q) {
     <h2 class="q-text">${q.text}</h2>
     <div class="likert-row">${btns}</div>
     <div class="likert-labels">
-      <span>Deloc de acord</span>
-      <span>Foarte de acord</span>
+      <span>Nu mă descrie</span>
+      <span>Mă descrie complet</span>
     </div>
   `;
 }
@@ -2439,6 +3039,8 @@ function attachLikertHandlers(q) {
       buttons.forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       state.answers[q.id] = parseInt(btn.dataset.value);
+      saveProgress();
+      playTap();
       enableNext();
       // Auto-advance after a beat - feels premium
       setTimeout(() => {
@@ -2463,6 +3065,8 @@ function attachChoiceHandlers(q) {
       buttons.forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       state.answers[q.id] = btn.dataset.letter;
+      saveProgress();
+      playTap();
       enableNext();
       setTimeout(() => {
         if (document.getElementById('q-next')) nextQuestion();
@@ -2488,6 +3092,7 @@ function attachRankingHandlers(q) {
     const items = list.querySelectorAll('.rank-item');
     const order = [...items].map(it => parseInt(it.dataset.origIdx));
     state.answers[q.id] = order;
+    saveProgress();
     enableNext();
   };
 
@@ -2503,6 +3108,7 @@ function attachRankingHandlers(q) {
     onEnd: () => {
       updatePositions();
       saveOrder();
+      playTap();
     }
   });
 
@@ -2529,18 +3135,64 @@ function isLastQuestion() {
   return state.currentBlockIdx === lastBlock && state.currentQuestionIdx === lastQInBlock;
 }
 
-function nextQuestion() {
+function advanceQuestionPointer() {
   const block = BLOCKS[state.currentBlockIdx];
   if (state.currentQuestionIdx < block.questions.length - 1) {
     state.currentQuestionIdx++;
-    renderQuestion();
+    return 'next-q';
+  } else if (state.currentBlockIdx < BLOCKS.length - 1) {
+    state.currentBlockIdx++;
+    state.currentQuestionIdx = 0;
+    return 'next-block';
   } else {
-    // Move to next block (intro) or finish
-    if (state.currentBlockIdx < BLOCKS.length - 1) {
-      renderBlockIntro(state.currentBlockIdx + 1);
-    } else {
-      renderLoading();
-    }
+    return 'done';
+  }
+}
+
+function renderCurrentStep() {
+  // Render either block intro (if at idx 0 of a block) or question
+  if (state.currentQuestionIdx === 0) {
+    renderBlockIntro(state.currentBlockIdx);
+  } else {
+    renderQuestion();
+  }
+  saveProgress();
+}
+
+function nextQuestion() {
+  // Compute global question number BEFORE advancing
+  const globalNum = getGlobalQuestionNumber();
+
+  // Update streak indicator (subtle gamification)
+  if (globalNum === 5 && !state.streakDismissed) {
+    setTimeout(() => showStreakBadge('răspunzi rapid și sigur'), 200);
+  } else if (globalNum === 15) {
+    setTimeout(() => showStreakBadge('aproape jumătate · ține ritmul'), 200);
+  } else if (globalNum === 25) {
+    setTimeout(() => showStreakBadge('ultima sută de metri'), 200);
+  }
+
+  // Check if there's a motivation milestone right after this question
+  if (MOTIVATIONS[globalNum] && !state.shownMotivations[globalNum]) {
+    state.shownMotivations[globalNum] = true;
+    saveProgress();
+    renderMotivation(globalNum);
+    return;
+  }
+
+  // Otherwise advance normally
+  const result = advanceQuestionPointer();
+  if (result === 'done') {
+    clearProgress();
+    renderLoading();
+    return;
+  }
+  saveProgress();
+
+  if (result === 'next-block') {
+    renderBlockIntro(state.currentBlockIdx);
+  } else {
+    renderQuestion();
   }
 }
 
@@ -2601,7 +3253,14 @@ function renderLoading() {
 function renderResult() {
   const r = state.result;
   setProgress(100, false);
+  setLevelAccent(null); // back to default gold
   updateMastMeta('Raport final');
+
+  // Hide streak badge if visible
+  if (_streakBadgeEl) _streakBadgeEl.classList.remove('visible');
+
+  // Play completion fanfare
+  setTimeout(() => playCompletion(), 200);
 
   const now = new Date();
   const dateStr = now.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
